@@ -1,0 +1,8 @@
+pSI 1.1
+===========
+
+* URL to download pSI.data package was added to package documentation to facilitate use of 
+  sample mouse & human data and allow for reproducible research.
+
+* ‘fisher.iteration’ function now excludes duplicated genes in user supplied candidate  
+  gene list
