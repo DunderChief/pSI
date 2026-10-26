@@ -1,0 +1,21 @@
+url: https://dunderchief.github.io/pSI/
+template:
+  bootstrap: 5
+
+reference:
+- title: Compute the specificity index
+  contents:
+  - specificity.index
+- title: Summarize the genes specific to each cell type
+  contents:
+  - pSI.list
+  - pSI.count
+- title: Candidate gene list analysis (CSEA)
+  contents:
+  - candidate.overlap
+  - fisher.iteration
+- title: Bundled example data
+  contents:
+  - sample.data
+  - candidate.genes
+  - dataset.s1
