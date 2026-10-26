@@ -1,23 +1,25 @@
-#'@title
-#'Sample Input & Output pSI Data Sets
+#' Sample Input and Output pSI Data Sets
 #'
-#'@description
-#'Sample expression matrix and sample specificity index statistic (pSI) output data sets used to illustrate the \code{pSI} package functions.
-#'NOTE:Supplementary data (human & mouse expression sets, calculated pSI datasets, etc.) can be found in \code{pSI.data} package located at the following URL:
-#'\url{http://genetics.wustl.edu/jdlab/psi_package/}
+#' A sample expression matrix and the corresponding specificity index (pSI)
+#' output, used to illustrate the \code{pSI} package functions.
 #'
-#'@details
-#'Sample expression matrix is the Brainspan RNAseq data condensed 
-#'into 6 major regional divisions for just the young adult regions. Sample 
-#'pSI output data set is calculated from the young adulthood Brainspand RNAseq 
-#'data just previously described.
+#' @details
+#' \code{pSI.input} is the BrainSpan RNA-seq data for young adulthood,
+#' condensed into six major regional divisions (one column per region).
+#' \code{pSI.output} is the pSI table calculated from it with
+#' \code{\link{specificity.index}}.
 #'
-#'@examples
-#'data(sample.data)
-#'
-#'@docType data
-#'@keywords datasets
-#'@format List comprised of two data frames.
-#'@name sample.data
-#'@source \url{http://www.brainspan.org}
-NULL
+#' @format A list of two data frames, each with 16866 rows (genes, as row
+#'   names) and 6 columns (brain regions):
+#' \describe{
+#'   \item{\code{pSI.input}}{expression values}
+#'   \item{\code{pSI.output}}{pSI values, \code{NA} where the gene is not
+#'     specific to that region}
+#' }
+#' @source BrainSpan: Atlas of the Developing Human Brain,
+#'   \url{https://www.brainspan.org}
+#' @examples
+#' data(sample.data)
+#' str(sample.data, max.level = 1)
+#' head(sample.data$pSI.input)
+"sample.data"

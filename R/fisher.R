@@ -1,6 +1,7 @@
-#'@title 
-#'Fisher's Exact Test (Single Cell Type & pSI Threshold)
-
+# Internal: one-sided Fisher's exact test for over-representation of the
+# candidate genes among the genes specific to one cell type (column `cell`)
+# at one pSI threshold (`thresh`). Called by fisher.iteration() for every
+# cell type / threshold combination. Not exported.
 fisher<-function(pSI, candidate.genes, thresh, cell, total){
   #creating index of genes and column binding it onto the existing pSI data frame
   pSI<-cbind(c(1:length(pSI[,1])),pSI) 

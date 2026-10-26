@@ -1,29 +1,43 @@
-#'@title 
-#'Convert pSI output to gene list
+#' Convert pSI output to gene lists
 #'
-#'@description 
-#'\code{pSI.list} returns list consisting of 6 data frames, one for each pSI threshold.
+#' \code{pSI.list} extracts, for each cell type/sample and each of the four
+#' standard pSI thresholds (0.05, 0.01, 0.001 and 0.0001), the genes whose pSI
+#' values fall below the threshold, i.e. the genes specific to that cell type.
 #'
-#'@details
-#'Each data frame contains genes whose pSI values fall below each respective threshold for each cell type/sample included in the analysis.
-#'NOTE:Supplementary data (human & mouse expression sets, calculated pSI datasets, etc.) can be found in \code{pSI.data} package located at the following URL:
-#'\url{http://genetics.wustl.edu/jdlab/psi_package/}
+#' @details
+#' Gene symbols are converted to upper case for consistency in downstream
+#' analysis. Within each data frame the columns hold different numbers of genes
+#' and are padded with \code{NA} to equal length.
 #'
-#'@param pSIs  data frame output from \code{specificity.index} function with the number of columns equal to the number of samples and genes as rows.
-#'@param write.csv logical variable indicating if csv files will be written to the current working directory (default value is FALSE)
+#' @param pSIs data frame output from \code{\link{specificity.index}}, with one
+#'   column per cell type/sample and genes as rows.
+#' @param write.csv logical. If \code{TRUE}, one CSV file per threshold
+#'   (\code{pSi_0.05.csv}, \code{pSi_0.01.csv}, \code{pSi_0.001.csv},
+#'   \code{pSi_1e-04.csv}) is written to the current working directory. The
+#'   default is \code{FALSE}: since pSI 1.2.0 nothing is written unless you ask
+#'   for it.
 #'
-#'@export
-#'@import gdata
-#'@author Xiaoxiao Xu, Alan B. Wells, David OBrien, Arye Nehorai, Joseph D. Dougherty
+#' @return A named list of four data frames (\code{pSi_0.0001},
+#'   \code{pSi_0.001}, \code{pSi_0.01}, \code{pSi_0.05}), one per pSI
+#'   threshold. Each has one column per cell type/sample, named
+#'   \code{<sample>_<threshold>}, containing the symbols of the genes with pSI
+#'   below that threshold, padded with \code{NA}.
 #'
-#'@examples
-#'##load sample pSI output
-#'data(sample.data)
-#'##List the genes specific to each cell type/sample type across all pSI thresholds
-#'pSI.out.list <- pSI.list(pSIs=sample.data$pSI.output, write.csv=FALSE)
-#'
+#' @export
+#' @importFrom utils write.table
+#' @author Xiaoxiao Xu, Alan B. Wells, David R. O'Brien, Arye Nehorai, Joseph D. Dougherty
+#' @seealso \code{\link{pSI.count}} for the counts alone,
+#'   \code{\link{candidate.overlap}} to intersect these lists with a candidate
+#'   gene list.
+#' @examples
+#' ##load sample pSI output
+#' data(sample.data)
+#' ##List the genes specific to each cell type/sample type across all pSI thresholds
+#' pSI.out.list <- pSI.list(pSIs=sample.data$pSI.output)
+#' names(pSI.out.list)
+#' head(pSI.out.list$pSi_0.01)
 
-pSI.list <- function(pSIs,write.csv=TRUE){
+pSI.list <- function(pSIs,write.csv=FALSE){
   
   #Reassign gene names as uppercase for continuity in downstream analysis
   rownames(pSIs) <- toupper(rownames(pSIs))
@@ -44,7 +58,7 @@ pSI.list <- function(pSIs,write.csv=TRUE){
       
       #Binds together the lists of genes specific to each sample type for a given threshold
       if(!i==1){
-        gene_bind <- cbindX(gene_bind, sig_tmp)
+        gene_bind <- cbind_pad(gene_bind, sig_tmp)
         
       }     
       else{
@@ -78,7 +92,7 @@ pSI.list <- function(pSIs,write.csv=TRUE){
     
   }
   
-  #create list of 6 dataframes, one for each pSI threshold
+  #create list of 4 dataframes, one for each pSI threshold
   pSi_list <- list(get("pSi_0.0001"), get("pSi_0.001"), get("pSi_0.01"), get("pSi_0.05"))
   pSI_rang <- c("pSi_0.0001", "pSi_0.001", "pSi_0.01", "pSi_0.05")
   names(pSi_list)<- pSI_rang
@@ -86,5 +100,3 @@ pSI.list <- function(pSIs,write.csv=TRUE){
   return(pSi_list)
 
 }
-
-

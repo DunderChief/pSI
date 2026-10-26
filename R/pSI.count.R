@@ -1,27 +1,30 @@
-#'@title 
-#'Convert pSI output to gene count list
+#' Convert pSI output to gene counts
 #'
-#'@description 
-#'\code{pSI.count} This functions counts number of genes specific to each sample type
+#' \code{pSI.count} counts the number of genes specific to each cell
+#' type/sample at each of the four standard pSI thresholds (0.05, 0.01, 0.001
+#' and 0.0001).
 #'
-#'@details
-#'Returns data frame consisting of 6 rows, one for each pSI threshold, and as many columns as cell types/samples were included in the analysis.
-#'Each cell type/sample will have a count of many genes whose pSI values fall below each respective threshold for each cell type/sample.
-#'NOTE:Supplementary data (human & mouse expression sets, calculated pSI datasets, etc.) can be found in \code{pSI.data} package located at the following URL:
-#'\url{http://genetics.wustl.edu/jdlab/psi_package/}
+#' @param pSIs data frame output from \code{\link{specificity.index}}, with one
+#'   column per cell type/sample and genes as rows.
+#' @param write.csv logical. If \code{TRUE}, the table is also written to
+#'   \code{gene_count_1.csv} in the current working directory. Default
+#'   \code{FALSE}.
 #'
-#'@param pSIs  data frame output from \code{specificity.index} function with the number of columns equal to the number of samples and genes as rows.
-#'@param write.csv logical variable indicating if csv files will be written to the current working directory (default value is FALSE)
+#' @return A data frame with four rows, one per pSI threshold (\code{"0.0001"},
+#'   \code{"0.001"}, \code{"0.01"}, \code{"0.05"}), and one column per cell
+#'   type/sample, giving the number of genes whose pSI value falls below each
+#'   threshold.
 #'
-#'@export
-#'@author Xiaoxiao Xu, Alan B. Wells, David OBrien, Arye Nehorai, Joseph D. Dougherty
-#'
-#'@examples
-#'##load sample pSI output
-#'data(sample.data)
-#'##Count the number of genes specific to each cell type/sample type across all pSI thresholds
-#'pSI.out.count <- pSI.count(pSIs=sample.data$pSI.output, write.csv=TRUE)
-#'
+#' @export
+#' @importFrom utils write.csv
+#' @author Xiaoxiao Xu, Alan B. Wells, David R. O'Brien, Arye Nehorai, Joseph D. Dougherty
+#' @seealso \code{\link{pSI.list}} for the gene lists themselves.
+#' @examples
+#' ##load sample pSI output
+#' data(sample.data)
+#' ##Count the number of genes specific to each cell type/sample type across all pSI thresholds
+#' pSI.out.count <- pSI.count(pSIs=sample.data$pSI.output)
+#' pSI.out.count
 
 pSI.count <- function(pSIs, write.csv=FALSE){
   

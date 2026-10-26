@@ -1,0 +1,49 @@
+citHeader("To cite pSI in publications, please cite the CSEA paper that introduced the package and, for the statistic itself, Dougherty et al. (2010):")
+
+bibentry(
+  bibtype = "Article",
+  header  = "The package and the CSEA method:",
+  title   = "Cell type-specific expression analysis to identify putative cellular mechanisms for neurogenetic disorders",
+  author  = c(person("Xiaoxiao", "Xu"),
+              person("Alan B.", "Wells"),
+              person("David R.", "O'Brien"),
+              person("Arye", "Nehorai"),
+              person("Joseph D.", "Dougherty")),
+  journal = "Journal of Neuroscience",
+  year    = "2014",
+  volume  = "34",
+  number  = "4",
+  pages   = "1420--1431",
+  doi     = "10.1523/JNEUROSCI.4488-13.2014"
+)
+
+bibentry(
+  bibtype = "Article",
+  header  = "The specificity index statistic:",
+  title   = "Analytical approaches to RNA profiling data for the identification of genes enriched in specific cells",
+  author  = c(person("Joseph D.", "Dougherty"),
+              person("Eric F.", "Schmidt"),
+              person("Miho", "Nakajima"),
+              person("Nathaniel", "Heintz")),
+  journal = "Nucleic Acids Research",
+  year    = "2010",
+  volume  = "38",
+  number  = "13",
+  pages   = "4218--4230",
+  doi     = "10.1093/nar/gkq130"
+)
+
+bibentry(
+  bibtype = "Article",
+  header  = "Tissue-specific expression analysis (TSEA) with pSI:",
+  title   = "The anatomical distribution of genetic associations",
+  author  = c(person("A.", "Wells"), person("N.", "Kopp"), person("X.", "Xu"),
+              person("D. R.", "O'Brien"), person("W.", "Yang"), person("A.", "Nehorai"),
+              person("T. L.", "Adair-Kirk"), person("R.", "Kopan"), person("J. D.", "Dougherty")),
+  journal = "Nucleic Acids Research",
+  year    = "2015",
+  volume  = "43",
+  number  = "22",
+  pages   = "10804--10820",
+  doi     = "10.1093/nar/gkv1262"
+)

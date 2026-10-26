@@ -1,43 +1,94 @@
-#'@title 
-#'Specificity Index Statistic
+#' Specificity Index Statistic
 #'
-#'@description
-#'\code{specificity.index}  Calculates specificity index statistic (pSI) values of input expression matrix which can be used for comparative 
-#'quantitative analysis to identify genes enriched in specific cell populations across a large number of profiles. 
-#'This measure correctly predicts in situ hybridization patterns for many cell types. \code{specificity.index} returns a data frame of equal size as input data frame, 
-#'with pSI values replacing the expression values.
-#'NOTE:Supplementary data (human & mouse expression sets, calculated pSI datasets, etc.) can be found in \code{pSI.data} package located at the following URL:
-#'\url{http://genetics.wustl.edu/jdlab/psi_package/}
+#' \code{specificity.index} calculates the specificity index statistic (pSI)
+#' for every gene in every cell type/sample of an expression matrix. The pSI
+#' identifies genes enriched in specific cell populations across a large
+#' number of profiles, and correctly predicts in situ hybridization patterns
+#' for many cell types (Dougherty et al. 2010).
 #'
-#'@details
-#' \eqn{SI_{n,1}=  \frac{ \sum_{k=2}^m rank( \frac{ IP_{1,n} }{ IP_{k,n} })  }{m-1}}
-#' 
-#'@param pSI.in  data frame with expresion values for genes in rows, and samples
-#'or cell types in columns (at this point replicate arrays have been averaged, so
-#'one column per cell type) 
-#'@param pSI.in.filter matched array (same genes and samples) but with NA's for any
-#' genes that should be excluded for a particular cell type.
-#'@param bts numeric. number of distributions to average for permutation testing
-#'@param p_max numeric. maximum pvalue to be calculated
-#'@param e_min numeric. minimum expression value for a gene to be included. For microarray studies, a value of 50 has been the default value and for RNAseq studies, a value of 0.3 has been used as the default.
-#'@param hist logical. option for producing histograms of actual & permuted distributions of gene rank
-#'@param SI logical. option to output SI value instead of default pSI value
+#' @details
+#' For cell type 1 and gene \eqn{n}, the specificity index is the mean, over the
+#' other \eqn{m-1} cell types \eqn{k}, of the rank (among all genes) of the
+#' expression ratio of that gene between cell type 1 and cell type \eqn{k}:
+#' \deqn{SI_{n,1}=  \frac{ \sum_{k=2}^m rank( \frac{ IP_{1,n} }{ IP_{k,n} })  }{m-1}}
+#' A low SI means the gene is highly enriched in cell type 1 relative to the
+#' others. The pSI is a p-value for the observed SI, obtained by comparing it
+#' with a null distribution of SI values computed from \code{bts} expression
+#' matrices resampled with replacement. To save time it is only calculated for
+#' genes whose p-value is below \code{p_max}; all other genes, and genes with
+#' expression below \code{e_min} or set to \code{NA} in \code{pSI.in.filter},
+#' are returned as \code{NA}.
 #'
-#'@export
-#'@author Xiaoxiao Xu, Alan B. Wells, David OBrien, Arye Nehorai, Joseph D. Dougherty
-#'@references Joseph D. Dougherty, Eric F. Schmidt, Miho Nakajima, and Nathaniel Heintz
-#'Analytical approaches to RNA profiling data for the identification of genes enriched in specific cells
-#'Nucl. Acids Res. (2010)
+#' Because the null distribution is resampled, results vary slightly from run
+#' to run; call \code{\link{set.seed}} first for a reproducible result.
 #'
-#'@examples
-#'##load sample expression matrix
-#'data(sample.data)
-#'##calculate specificity index on expression matrix
-#'##(Normally for RNAseq data, and e_min of 0.3, microarrays: e_min= 50)
-#'pSI.output <- specificity.index(pSI.in=sample.data$pSI.input, e_min=20)
+#' @param pSI.in data frame with expression values for genes in rows and samples
+#'   or cell types in columns (replicate arrays already averaged, so one column
+#'   per cell type).
+#' @param pSI.in.filter optional matched data frame (same genes and samples)
+#'   with \code{NA} for any gene that should be excluded for a particular cell
+#'   type.
+#' @param bts numeric. Number of resampled distributions to average for the
+#'   permutation test.
+#' @param p_max numeric. Maximum p-value to calculate; genes with larger
+#'   p-values are returned as \code{NA}.
+#' @param e_min numeric. Minimum expression value for a gene to be included. A
+#'   value of 50 has been used for microarray studies and 0.3 for RNA-seq
+#'   studies.
+#' @param hist logical. If \code{TRUE}, draw histograms of the sampled (null)
+#'   and actual distributions of mean gene rank for each cell type on the
+#'   current graphics device, one page per cell type. (Before pSI 1.2.0 these
+#'   were written as PNG files into the working directory.)
+#' @param SI logical. If \code{TRUE}, return the specificity index (mean rank)
+#'   itself instead of the pSI p-value.
+#' @param hist_file optional path to a PDF file. If supplied, the histograms
+#'   are written there (one page per cell type) instead of to the current
+#'   device, and \code{hist} is treated as \code{TRUE}.
 #'
+#' @return A data frame with the same row and column names as \code{pSI.in}.
+#'   Each cell holds the pSI value (a p-value) of that gene for that cell
+#'   type/sample, or \code{NA} if the gene was excluded (expression below
+#'   \code{e_min}, filtered by \code{pSI.in.filter}, or p-value above
+#'   \code{p_max}). With \code{SI = TRUE} the specificity index is returned
+#'   instead of the p-value.
+#'
+#' @export
+#' @author Xiaoxiao Xu, Alan B. Wells, David R. O'Brien, Arye Nehorai, Joseph D. Dougherty
+#' @references
+#' Dougherty JD, Schmidt EF, Nakajima M, Heintz N (2010). Analytical approaches
+#' to RNA profiling data for the identification of genes enriched in specific
+#' cells. \emph{Nucleic Acids Research} 38(13):4218-4230.
+#' \doi{10.1093/nar/gkq130}
+#' @seealso \code{\link{pSI.list}}, \code{\link{pSI.count}},
+#'   \code{\link{candidate.overlap}}, \code{\link{fisher.iteration}}
+#' @examples
+#' ##load sample expression matrix
+#' data(sample.data)
+#' ##calculate specificity index on expression matrix
+#' ##(Normally for RNAseq data, and e_min of 0.3, microarrays: e_min= 50)
+#' set.seed(1)
+#' pSI.output <- specificity.index(pSI.in=sample.data$pSI.input, e_min=20)
+#' head(pSI.output[rowSums(!is.na(pSI.output)) > 0, ])
+#'
+#' ##histograms of the sampled and actual rank distributions, to a temporary PDF
+#' pdf_file <- tempfile(fileext = ".pdf")
+#' pSI.output <- specificity.index(pSI.in=sample.data$pSI.input, e_min=20,
+#'                                 hist_file=pdf_file)
+#' unlink(pdf_file)
 
-specificity.index<-function(pSI.in, pSI.in.filter, bts=50, p_max=0.1, e_min=0.3, hist=FALSE, SI=FALSE){
+specificity.index<-function(pSI.in, pSI.in.filter, bts=50, p_max=0.1, e_min=0.3, hist=FALSE, SI=FALSE, hist_file=NULL){
+
+  #histograms go to a multi-page PDF if hist_file is given, otherwise to the current device.
+  #Both the device and the graphical parameters are restored when the function exits.
+  if(!is.null(hist_file)){
+    hist <- TRUE
+    grDevices::pdf(file=hist_file, width=10, height=5)
+    on.exit(grDevices::dev.off(), add=TRUE)
+  }
+  if(isTRUE(hist)){
+    oldpar <- graphics::par(mfrow=c(1,2))
+    on.exit(graphics::par(oldpar), add=TRUE, after=FALSE)
+  }
 
   #make a clean version of pSI.in...
   dat_clean<-pSI.in
@@ -123,14 +174,10 @@ specificity.index<-function(pSI.in, pSI.in.filter, bts=50, p_max=0.1, e_min=0.3,
     avg_ipO<-c()
     #average the IPs for the actual values.
     avg_ipO <- .rowMeans(rankzO, m=nrow(rankzO), n=ncol(rankzO))
-    if(hist==TRUE){
-      # Make a picture of the situation.
-      fnm = paste("hist_rnks",colnames(pSI.in)[j],".png",sep="_")
-      png(filename=fnm, width=960, height=960)
-      par(mfrow=c(2,2))
-      hist(avg_ip_dist, freq=FALSE , xlim=c(0,smps), main="Sampled distribution")
-      hist(avg_ipO, freq=FALSE, xlim=c(0,smps), main="Actual distribution")
-      dev.off()
+    if(isTRUE(hist)){
+      # Make a picture of the situation: sampled (null) and actual distributions, one page per cell type.
+      graphics::hist(avg_ip_dist, freq=FALSE , xlim=c(0,smps), main=paste("Sampled distribution:", colnames(pSI.in)[j]))
+      graphics::hist(avg_ipO, freq=FALSE, xlim=c(0,smps), main=paste("Actual distribution:", colnames(pSI.in)[j]))
     }
     # make a variable to catch the Pvals
     pvals<-c()

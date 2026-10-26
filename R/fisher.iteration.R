@@ -1,44 +1,57 @@
-#'@title 
-#'Fisher's Exact Test Across All Cell Types & pSI Thresholds
+#' Fisher's Exact Test Across All Cell Types and pSI Thresholds
 #'
-#'@description 
-#'\code{fisher.iteration} will test a candidate gene list for overrepresenation in the various cell type/pSI threshold combinations produced by
-#'the specificty.index function. 
-#'NOTE:Supplementary data (human & mouse expression sets, calculated pSI datasets, etc.) can be found in \code{pSI.data} package located at the following URL:
-#'\url{http://genetics.wustl.edu/jdlab/psi_package/}
+#' \code{fisher.iteration} tests a candidate gene list for over-representation
+#' among the genes specific to each cell type/sample, at each of the four
+#' standard pSI thresholds (0.05, 0.01, 0.001 and 0.0001), using a one-sided
+#' Fisher's exact test.
 #'
-#'@details
-#'This function is used to answer the question of what is the probability that a certain number of genes specific to a certain cell type/sample occured by chance
-#'(as usual with low probabilities corresponding to high statistical significance).
-#'This is accomplished with a binary variable for each gene in the population with two mutual exclusive values: 1) The gene is specific to the 
-#'cell type/sample in question or 2) The gene is not specific to the cell type/sample in question
+#' @details
+#' For every cell type/threshold combination the function asks: what is the
+#' probability that this many candidate genes would be specific to this cell
+#' type by chance? Each gene in the background is classified by two binary
+#' variables, specific to the cell type at this threshold or not, and in the
+#' candidate list or not, and the resulting 2 x 2 table is tested with
+#' \code{\link[stats]{fisher.test}} (alternative \code{"greater"}). Gene
+#' symbols are compared in upper case, and duplicated candidate genes are
+#' counted once.
 #'
-#'@param pSIs  data frame output from \code{specificity.index} function with the number of columns equal to the number of samples and genes as rows.
-#'@param candidate.genes candidate gene list tested for overrepresentation in cell types/samples. Comprised of official gene symbols.
-#'@param background character string used to indicate what background gene list should be used in Fisher's exact test for overrepresentation. 
-#'The default value is \code{"data.set"} which indicates that the gene list of the input pSI data set will be used to represent the background gene list. 
-#'This would be used in the case when the input pSI data set is comprised of genes derived from the same species as the genes found in the candidate gene list.
-#'\code{background} can take on two other values, the first of which is \code{"human.mouse"}. 
-#'\code{"human.mouse"} indicates that the background gene list will be comprised of intersection of two lists: 1) all genes in the input pSI dataset (all are human genes), 2) all genes with clear human-mouse homologs.
-#'This option would be used in the case when the input data set is comprised of human genes (i.e. genes from a human microarray) and the candidate gene list being tested is comprised of mouse genes. 
-#'The last value \code{background} can take on is  \code{"mouse.human"}.
-#'\code{"mouse.human"} indicates that the background gene list will be comprised of intersection of two lists: 1) all genes in the input pSI dataset (all are mouse genes), 2) all genes with clear mouse-human homologs.
-#'This option would be used in the case when the input data set is comprised of mouse genes (i.e. genes from a mouse microarray) and the candidate gene list being tested is comprised of human genes. 
-#'@param p.adjust logical. default output is bonferroni corrected p-value but if \code{p.adjust} is \code{FALSE}, nominal p-values will be output.
+#' @param pSIs data frame output from \code{\link{specificity.index}}, with one
+#'   column per cell type/sample and genes as rows.
+#' @param candidate.genes character vector of official gene symbols to test for
+#'   over-representation.
+#' @param background character string naming the background gene list for the
+#'   test. The default \code{"data.set"} uses all genes in \code{pSIs}; use it
+#'   when the candidate genes and the pSI data set come from the same species.
+#'   \code{"human.mouse"} restricts the background to the genes in \code{pSIs}
+#'   (human) that have a clear mouse homolog, for testing a mouse candidate list
+#'   against a human pSI data set; \code{"mouse.human"} is the converse. These
+#'   two options download the UCSC kgXref table for mm10 or hg19 (a file of
+#'   several megabytes) from \url{https://hgdownload.soe.ucsc.edu/} and stop
+#'   with an informative error if the download fails.
+#' @param p.adjust logical. If \code{TRUE} (the default) p-values are adjusted
+#'   for multiple testing across cell types with the Benjamini-Hochberg method
+#'   (\code{\link[stats]{p.adjust}}, method \code{"BH"}), separately for each
+#'   threshold; if \code{FALSE}, nominal p-values are returned.
 #'
-#'@export
-#'@author Xiaoxiao Xu, Alan B. Wells, David OBrien, Arye Nehorai, Joseph D. Dougherty
-#'@examples
-#'##load sample pSI output
-#'data(sample.data)
-
-#'##load sample candidate gene lists
-#'data(candidate.genes)
-#'##run Fisher's exact test for overrperesentation on pSI.out for the AutDB 
-#'##candidate gene list across all cell types/sample types & pSI thresholds
-#'fisher.out.AutDB <- fisher.iteration(pSIs=sample.data$pSI.output, 
-#'                                          candidate.genes=candidate.genes$AutDB)
+#' @return A data frame with one row per cell type/sample and four columns, one
+#'   per pSI threshold (0.05, 0.01, 0.001, 0.0001). Column names end in
+#'   \code{"adjusted"} or \code{"nominal"} depending on \code{p.adjust}.
 #'
+#' @export
+#' @importFrom stats fisher.test p.adjust
+#' @importFrom utils download.file read.table
+#' @author Xiaoxiao Xu, Alan B. Wells, David R. O'Brien, Arye Nehorai, Joseph D. Dougherty
+#' @seealso \code{\link{candidate.overlap}} for the overlapping genes themselves.
+#' @examples
+#' ##load sample pSI output
+#' data(sample.data)
+#' ##load sample candidate gene lists
+#' data(candidate.genes)
+#' ##run Fisher's exact test for overrepresentation on pSI.out for the AutDB
+#' ##candidate gene list across all cell types/sample types & pSI thresholds
+#' fisher.out.AutDB <- fisher.iteration(pSIs=sample.data$pSI.output,
+#'                                      candidate.genes=candidate.genes$AutDB)
+#' fisher.out.AutDB
 
 fisher.iteration<-function(pSIs, candidate.genes, background="data.set", p.adjust=TRUE){  
   
@@ -48,20 +61,12 @@ fisher.iteration<-function(pSIs, candidate.genes, background="data.set", p.adjus
     
   }else if(background=="human.mouse"){
     
-    temp <- tempfile()
-    download.file("http://hgdownload.cse.ucsc.edu/goldenPath/mm10/database/kgXref.txt.gz", temp)
-    kgxref.mouse <- read.table(gzfile(temp), sep="\t", row.names=NULL, header=FALSE, stringsAsFactors=FALSE, quote="")
-    unlink(temp)
-    kgxref.mouse <- kgxref.mouse[,5]
+    kgxref.mouse <- kgxref_symbols("mm10")
     total <- sum(!is.na(match(toupper(rownames(pSIs)), toupper(kgxref.mouse))))
     
   }else if(background=="mouse.human"){
     
-    temp <- tempfile()
-    download.file("http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/kgXref.txt.gz", temp)
-    kgxref.human <- read.table(gzfile(temp), sep="\t", row.names=NULL, header=FALSE, stringsAsFactors=FALSE, quote="")
-    unlink(temp)
-    kgxref.human <- kgxref.human[,5]
+    kgxref.human <- kgxref_symbols("hg19")
     #total <- 13421
     total <- sum(!is.na(match(toupper(rownames(pSIs)), toupper(kgxref.human))))
     
@@ -120,4 +125,27 @@ fisher.iteration<-function(pSIs, candidate.genes, background="data.set", p.adjus
   }
   
   return(outs_CTp)
+}
+
+# Download the UCSC kgXref table for an assembly ("mm10" or "hg19") and return
+# its gene-symbol column. Used for the cross-species backgrounds above. Fails
+# with an informative error rather than a cryptic one when offline, as CRAN
+# policy requires of packages that use internet resources. mode = "wb" keeps
+# the gzip file intact on Windows (the text-mode download in pSI <= 1.1 did not).
+kgxref_symbols <- function(assembly) {
+  url <- paste0("https://hgdownload.soe.ucsc.edu/goldenPath/", assembly,
+                "/database/kgXref.txt.gz")
+  temp <- tempfile(fileext = ".txt.gz")
+  on.exit(unlink(temp))
+  status <- tryCatch(
+    suppressWarnings(download.file(url, temp, quiet = TRUE, mode = "wb")),
+    error = function(e) -1L)
+  if (!identical(as.integer(status), 0L) || !file.exists(temp) || file.size(temp) == 0) {
+    stop("Could not download the UCSC kgXref table from ", url,
+         ". Check your internet connection, or use background = \"data.set\".",
+         call. = FALSE)
+  }
+  kgxref <- read.table(gzfile(temp), sep = "\t", row.names = NULL, header = FALSE,
+                       stringsAsFactors = FALSE, quote = "")
+  kgxref[, 5]
 }

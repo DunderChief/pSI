@@ -1,27 +1,22 @@
-#'@title
-#'Supplementary Data Set 1
-#' 
-#'@description
-#'Differentially expressed genes (up-regulated & down-regulated) in cortices of autsitic vs control subjects from human transcriptomic data.
-#'NOTE:Supplementary data (human & mouse expression sets, calculated pSI datasets, etc.) can be found in \code{pSI.data} package located at the following URL:
-#'\url{http://genetics.wustl.edu/jdlab/psi_package/}
-
-#'@details
-#'\code{dataset.s1} is a list which contains two character vectors of differentially expressed genes. Differential expression 
-#'was assessed using the SAM package (Significance Analysis of Microarrays), for FDR <.05 and fold change >1.3. 
-#'\itemize{
-#'  \item{\code{dataset.s1$up.regulated}}\cr{Up-regulated genes (N=234)}
-#'  \item{\code{dataset.s1$down.regulated}}\cr{ - Down-regulated genes (N=229)}
-#'}
+#' Supplementary Data Set 1: Genes Differentially Expressed in Autistic Cortex
 #'
-#'@examples
-#'data(dataset.s1)
+#' Genes differentially expressed (up- and down-regulated) in the cortex of
+#' autistic versus control subjects, from human transcriptomic data
+#' (Voineagu et al. 2011).
 #'
-#'@docType data
-#'@keywords datasets
-#'@format List containing two character vectors
-#'@name dataset.s1
-#'@source
-#'Voineagu I, Wang X, Johnston P, Lowe JK, Tian Y, Horvath S, et al. (2011): Transcriptomic 
-#'analysis of autistic brain reveals convergent molecular pathology. Nature. 474:380-384.
-NULL
+#' @details
+#' Differential expression was assessed with SAM (Significance Analysis of
+#' Microarrays) at FDR < 0.05 and fold change > 1.3.
+#'
+#' @format A list of two character vectors of gene symbols:
+#' \describe{
+#'   \item{\code{up.regulated}}{up-regulated genes (N = 234)}
+#'   \item{\code{down.regulated}}{down-regulated genes (N = 229)}
+#' }
+#' @source Voineagu I, Wang X, Johnston P, Lowe JK, Tian Y, Horvath S, et al.
+#'   (2011). Transcriptomic analysis of autistic brain reveals convergent
+#'   molecular pathology. \emph{Nature} 474:380-384. \doi{10.1038/nature10110}
+#' @examples
+#' data(dataset.s1)
+#' lengths(dataset.s1)
+"dataset.s1"
