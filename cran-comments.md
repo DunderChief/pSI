@@ -36,9 +36,11 @@ in NEWS.md:
 
 ## Test environments
 
-TODO before submission: list local R-release (Linux), R-devel (Docker),
-win-builder (R-devel), and the GitHub Actions matrix (Linux devel/release/
-oldrel, macOS release, Windows release).
+* Local: R 4.5.3 on x86_64 Linux (Ubuntu), `R CMD check --as-cran`.
+* R Under development (unstable) (2026-10-19 r90708) on x86_64 Linux, in the
+  rocker/r-devel Docker image, `R CMD check --as-cran`.
+* TODO before submission: win-builder (R-devel) and the GitHub Actions matrix
+  (Linux devel/release/oldrel-1, macOS release, Windows release).
 
 ## R CMD check results
 
