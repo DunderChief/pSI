@@ -18,12 +18,11 @@
 #' Bundled example data: \code{\link{sample.data}}, \code{\link{candidate.genes}}
 #' and \code{\link{dataset.s1}}.
 #'
-#' @section Supplementary data:
-#' Precomputed pSI tables for mouse cell types (bacTRAP) and human brain regions
-#' (BrainSpan), formerly distributed as the companion package \code{pSI.data}
-#' from a lab web page that no longer exists, are hosted separately because they
-#' are too large for CRAN. See the package README for the current download
-#' location.
+#' @section Companion data:
+#' Precomputed pSI tables for 35 mouse cell types (bacTRAP) and for human brain
+#' regions across development (BrainSpan), formerly the companion package
+#' \code{pSI.data}, are too large for CRAN and are downloaded on first use with
+#' \code{\link{psi_data}}.
 #'
 #' @references
 #' Dougherty JD, Schmidt EF, Nakajima M, Heintz N (2010). Analytical approaches

@@ -33,6 +33,13 @@ in NEWS.md:
 * roxygen2 documentation with `\value` for every exported function;
   `Authors@R`; DOIs for all references; dead URLs removed.
 * Examples and tests write only to `tempdir()`.
+* New `psi_data()` downloads the 10 MB companion data (formerly the `pSI.data`
+  package, never on CRAN) from a GitHub release of this package on first use.
+  It verifies checksums, writes outside `tempdir()` only with the user's
+  consent (`tools::R_user_dir()`, hence `R (>= 4.0.0)`), and returns `NULL`
+  with a message if the download fails. Its example is in `\donttest` and
+  tolerates being offline; the test that fetches the real files is skipped on
+  CRAN, the rest of its tests use a mocked download.
 
 ## Test environments
 

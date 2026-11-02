@@ -53,15 +53,27 @@ candidate.overlap(sample.data$pSI.output, candidate.genes$AutDB)
 See `?specificity.index` for the statistic and its parameters, and the
 [package website](https://dunderchief.github.io/pSI/) for the full reference.
 
-## Supplementary data (the former pSI.data package)
+## Companion data (the former pSI.data package)
 
-Precomputed pSI tables for mouse cell types (bacTRAP, as of October 2013) and
-human brain regions (BrainSpan), used in the CSEA paper, were distributed as the
-companion package `pSI.data`. At 10 MB it was never on CRAN and the lab URL
-that hosted it is gone.
+Precomputed pSI tables for 35 mouse cell types (bacTRAP, as of October 2013)
+and for human brain regions across development (BrainSpan), used in the CSEA
+paper, were distributed as the companion package `pSI.data`. At 10 MB they were
+never on CRAN. They now live as a
+[GitHub release](https://github.com/DunderChief/pSI/releases/tag/pSI.data-1.0)
+of this repository, unchanged from the 2014 originals, and the package fetches
+them on demand:
 
-**TODO (before the CRAN submission): hosting is being set up; the files and a
-download helper will be documented here.**
+```r
+mouse <- psi_data("mouse")   # asks once whether to keep a local copy
+human <- psi_data("human")
+
+# CSEA of a candidate list against the 35 mouse cell types
+fisher.iteration(mouse$psi.out, candidate.genes$AutDB)
+```
+
+`psi_data()` verifies each download against its checksum and returns `NULL`
+with a message, rather than an error, if the files cannot be fetched. See
+`?psi_data` for what the two lists contain and how caching works.
 
 ## Citing pSI
 

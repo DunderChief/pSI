@@ -1,0 +1,141 @@
+#' Download the companion pSI data sets (the former pSI.data package)
+#'
+#' @description
+#' \code{psi_data} fetches the precomputed Specificity Index (pSI) tables that
+#' used to be distributed as the companion package \code{pSI.data}: mouse cell
+#' types profiled by bacTRAP, and human brain regions from BrainSpan. They are
+#' too large for CRAN (about 10 MB together), so they are published as a
+#' release on the pSI GitHub repository and downloaded on first use.
+#'
+#' @details
+#' The two data sets, unchanged from pSI.data 1.0 (2014):
+#' \describe{
+#'   \item{\code{"mouse"}}{a list of three data frames of 16907 genes by 35
+#'     mouse cell types or regions, profiled by translating ribosome affinity
+#'     purification (bacTRAP) on one microarray platform, as of October 2013:
+#'     \code{psi.in} (averaged expression values), \code{psi.in.filter}
+#'     (\code{NA} marks genes to exclude for a cell type) and \code{psi.out}
+#'     (pSI values).}
+#'   \item{\code{"human"}}{a list of two aggregations of BrainSpan RNA-seq data
+#'     for 16866 genes: \code{developmental.periods} (six brain regions across
+#'     ten developmental periods, 60 columns) and \code{young.adulthood} (the
+#'     same six regions for young adulthood only). Each holds \code{psi.in}
+#'     and \code{psi.out}.}
+#' }
+#' The \code{psi.out} tables are ready to use as the \code{pSIs} argument of
+#' \code{\link{fisher.iteration}}, \code{\link{candidate.overlap}},
+#' \code{\link{pSI.list}} and \code{\link{pSI.count}}.
+#'
+#' Every download is verified against the file's MD5 checksum. Where the file is
+#' kept depends on \code{cache}. With \code{cache = TRUE} it goes under the
+#' package's user cache directory, \code{tools::R_user_dir("pSI", "cache")},
+#' so later R sessions reuse it. With \code{cache = FALSE} it goes under
+#' \code{tempdir()} and disappears with the session. The default, \code{NULL},
+#' asks you once per session when R is interactive and otherwise behaves like
+#' \code{FALSE}. To skip the question in every session, set
+#' \code{options(pSI.data.cache = TRUE)} (or \code{FALSE}) in your
+#' \code{.Rprofile}. To delete the cached files, remove that directory:
+#' \code{unlink(tools::R_user_dir("pSI", "cache"), recursive = TRUE)}.
+#'
+#' @param dataset \code{"mouse"} or \code{"human"}.
+#' @param cache logical or \code{NULL}; see Details.
+#' @param quiet logical. If \code{TRUE}, no download messages are shown.
+#'
+#' @return The requested data set, a named list of data frames as described
+#'   above. If the file is not already available and cannot be downloaded (for
+#'   example when offline), \code{NULL} is returned invisibly with a message
+#'   rather than an error.
+#'
+#' @source \url{https://github.com/DunderChief/pSI/releases/tag/pSI.data-1.0}.
+#'   Mouse expression data from GEO series GSE13379 and GSE30626; human data
+#'   from the BrainSpan Atlas of the Developing Human Brain,
+#'   \url{https://www.brainspan.org}.
+#' @seealso \code{\link{sample.data}} for the small built-in example data.
+#' @export
+#' @importFrom tools R_user_dir md5sum
+#' @importFrom utils askYesNo download.file
+#' @examples
+#' \donttest{
+#' ## about 4 MB, kept only for this session
+#' mouse <- psi_data("mouse", cache = FALSE)
+#' if (!is.null(mouse)) {
+#'   names(mouse)
+#'   dim(mouse$psi.out)
+#'   ## CSEA: is the AutDB candidate list enriched in any mouse cell type?
+#'   fisher.iteration(mouse$psi.out, candidate.genes$AutDB)
+#' }
+#' }
+psi_data <- function(dataset = c("mouse", "human"), cache = NULL, quiet = FALSE) {
+  dataset <- match.arg(dataset)
+  info <- psi_data_info()[dataset, ]
+  file <- paste0(dataset, ".rda")
+
+  cache_dir <- R_user_dir("pSI", "cache")
+  temp_dir <- file.path(tempdir(), "pSI")
+
+  # already available, and intact, from an earlier call or session?
+  for (path in file.path(c(cache_dir, temp_dir), file)) {
+    if (file.exists(path) && checksum_ok(path, info$md5)) {
+      return(load_rda(path, info$object))
+    }
+  }
+
+  if (is.null(cache)) cache <- cache_consent(cache_dir)
+  dest_dir <- if (isTRUE(cache)) cache_dir else temp_dir
+  dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)
+  dest <- file.path(dest_dir, file)
+
+  if (!quiet) message("Downloading ", file, " (", info$size, ") from ", info$url)
+  ok <- tryCatch({
+    download.file(info$url, dest, mode = "wb", quiet = quiet)
+    TRUE
+  }, error = function(e) FALSE, warning = function(w) FALSE)
+
+  if (!ok || !file.exists(dest) || !checksum_ok(dest, info$md5)) {
+    unlink(dest)
+    message("Could not download ", file, " from ", info$url,
+            ". Check your internet connection and try again.")
+    return(invisible(NULL))
+  }
+  load_rda(dest, info$object)
+}
+
+# Registry of the hosted files: where they live, which object each contains,
+# and the MD5 checksum of the file as released (the release also carries
+# SHA256SUMS). A function rather than a constant so that tests can substitute it.
+psi_data_info <- function() {
+  base <- "https://github.com/DunderChief/pSI/releases/download/pSI.data-1.0/"
+  data.frame(
+    object = c("mouse", "human"),
+    url = paste0(base, c("mouse.rda", "human.rda")),
+    md5 = c("fda79c0b0ca504a1fbf6a94d472c04b8", "3600f3c4cc437cc4e0f9b8dc1b445764"),
+    size = c("4.3 MB", "5.8 MB"),
+    row.names = c("mouse", "human"),
+    stringsAsFactors = FALSE
+  )
+}
+
+checksum_ok <- function(path, md5) {
+  identical(unname(as.character(md5sum(path))), md5)
+}
+
+load_rda <- function(path, object) {
+  env <- new.env(parent = emptyenv())
+  load(path, envir = env)
+  get(object, envir = env, inherits = FALSE)
+}
+
+# Decide whether to use the persistent cache when the caller did not say.
+# Honors options(pSI.data.cache = TRUE/FALSE); otherwise asks once per session
+# when interactive, and never writes outside tempdir() when not interactive.
+cache_consent <- function(cache_dir) {
+  opt <- getOption("pSI.data.cache")
+  if (!is.null(opt)) return(isTRUE(opt))
+  if (!interactive()) return(FALSE)
+  answer <- askYesNo(paste0("Keep the pSI data files (about 10 MB) under\n  ", cache_dir,
+                            "\nso that future sessions do not download them again?"),
+                     default = FALSE)
+  answer <- isTRUE(answer)
+  options(pSI.data.cache = answer)
+  answer
+}

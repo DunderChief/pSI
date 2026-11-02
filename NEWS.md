@@ -6,6 +6,15 @@ since version 1.0, is the new maintainer. The five exported functions keep
 their names, arguments and results; the changes below are packaging and
 CRAN-policy fixes plus two small bug fixes.
 
+## New
+
+* `psi_data()` downloads the companion data sets formerly distributed as the
+  `pSI.data` package (35 mouse bacTRAP cell types and human BrainSpan brain
+  regions) from this package's GitHub releases, verifies each file's checksum,
+  and keeps it under `tools::R_user_dir("pSI", "cache")` only with the user's
+  consent (otherwise in `tempdir()`). When offline it returns `NULL` with a
+  message rather than an error. pSI therefore now requires R >= 4.0.0.
+
 ## Behavior changes
 
 * `pSI.list()` no longer writes CSV files unless asked: `write.csv` now

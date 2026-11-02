@@ -19,3 +19,6 @@ reference:
   - sample.data
   - candidate.genes
   - dataset.s1
+- title: Companion data, downloaded on first use
+  contents:
+  - psi_data
