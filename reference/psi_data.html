@@ -130,81 +130,36 @@ asks you once per session when R is interactive and otherwise behaves like
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">mouse</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">mouse</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">mouse</span><span class="op">$</span><span class="va">psi.out</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="co">## CSEA: is the AutDB candidate list enriched in any mouse cell type?</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="fisher.iteration.html">fisher.iteration</a></span><span class="op">(</span><span class="va">mouse</span><span class="op">$</span><span class="va">psi.out</span>, <span class="va">candidate.genes</span><span class="op">$</span><span class="va">AutDB</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="co">## how many genes are specific to each mouse cell type at each threshold</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="pSI.count.html">pSI.count</a></span><span class="op">(</span><span class="va">mouse</span><span class="op">$</span><span class="va">psi.out</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="co">## CSEA of a candidate list against these cell types (a few seconds):</span></span></span>
+<span class="r-in"><span>  <span class="co">## fisher.iteration(mouse$psi.out, candidate.genes$AutDB)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 0.05 - adjusted 0.01 - adjusted 0.001 - adjusted</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> RetR.Rods          7.449052e-01     0.835318816        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hyp                1.428057e-01     0.701482667        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hyp.Hcrt           6.964979e-01     0.744652895        0.9763077</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BF                 1.941180e-02     0.835318816        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BF.Chat            7.258860e-02     0.240080559        0.8491814</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BS                 3.099572e-01     0.114810985        0.1888174</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BS.chat            8.915541e-01     0.835318816        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BS.Slc6a4          2.581054e-01     0.688489098        0.7185308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cb                 1.428057e-01     0.835318816        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cb.septin4         4.954710e-01     0.744652895        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cb.pcp2            5.132206e-01     0.835318816        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cb.Neurod1         6.402928e-01     0.798355047        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cb.Lypd6           2.540340e-01     0.835318816        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cb.grp             4.848021e-01     0.798355047        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cb.Grm2            2.838006e-01     1.000000000        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cb.Aldh1L1         4.954710e-01     0.835318816        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cb.cnp             5.282949e-01     0.835318816        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cpu                1.925814e-03     0.100231191        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cpu.D2             2.407722e-06     0.057825501        0.7185308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cpu.D1             5.244334e-06     0.010701978        0.7185308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cpu.Chat           1.489991e-01     0.318225674        0.8491814</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ctx                1.504973e-01     0.395044660        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ctx.pdgfrajd340    7.810931e-01     0.931021473        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ctx.etv1_ts88      1.489991e-01     0.835318816        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ctx.pnoc           1.143759e-03     0.003325116        0.3999107</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ctx.Ntsr           1.157879e-08     0.050772523        0.8512958</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ctx.glt25d2        1.877604e-02     0.114810985        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ctx.Aldh1L1        4.954710e-01     0.835318816        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ctx.cort           1.934004e-04     0.095320891        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ctx.cnp            5.132206e-01     0.835318816        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Epi                6.990869e-04     0.910424027        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Epi.Chat           1.504973e-01     0.744652895        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Spc                2.315843e-01     0.835318816        0.9179855</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Spc.Chat           5.132206e-01     1.000000000        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> RetC.Cones         6.402928e-01     0.835318816        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 1e-04 - adjusted</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> RetR.Rods              1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hyp                    1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hyp.Hcrt               1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BF                     1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BF.Chat                0.5164376</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BS                     0.2887857</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BS.chat                1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BS.Slc6a4              0.5164376</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cb                     0.9729095</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cb.septin4             1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cb.pcp2                1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cb.Neurod1             1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cb.Lypd6               1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cb.grp                 1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cb.Grm2                1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cb.Aldh1L1             1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cb.cnp                 1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cpu                    1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cpu.D2                 0.5684382</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cpu.D1                 1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cpu.Chat               1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ctx                    1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ctx.pdgfrajd340        1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ctx.etv1_ts88          1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ctx.pnoc               0.1056685</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ctx.Ntsr               0.5684382</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ctx.glt25d2            1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ctx.Aldh1L1            1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ctx.cort               1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ctx.cnp                1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Epi                    1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Epi.Chat               1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Spc                    1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Spc.Chat               1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> RetC.Cones             1.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        RetR.Rods Hyp Hyp.Hcrt  BF BF.Chat  BS BS.chat BS.Slc6a4  Cb Cb.septin4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.0001        71  13       43   1      22   1      40        24  13         55</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.001         96  25       63   9      41   7      70        33  39        108</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.01         227  60      124  44      90  39     146        56 130        233</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.05         556 243      264 230     205 232     312       121 513        572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Cb.pcp2 Cb.Neurod1 Cb.Lypd6 Cb.grp Cb.Grm2 Cb.Aldh1L1 Cb.cnp Cpu Cpu.D2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.0001      87         18       37     22      17         31    104   3     32</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.001      109         41       50     39      35         81    175   8     65</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.01       186        136      104     85      92        249    335  60    167</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.05       365        366      208    222     271        632    675 259    452</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Cpu.D1 Cpu.Chat Ctx Ctx.pdgfrajd340 Ctx.etv1_ts88 Ctx.pnoc Ctx.Ntsr</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.0001     24       32   0              54            37       18        6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.001      55       45   2             104            65       37       13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.01      173      103  37             218           152       65       65</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.05      515      251 217             520           485      150      258</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Ctx.glt25d2 Ctx.Aldh1L1 Ctx.cort Ctx.cnp Epi Epi.Chat Spc Spc.Chat</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.0001           5          62        6      77  25       70  28       36</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.001           13         105       17     137  49      105  56       73</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.01            67         224       56     303 107      171 156      151</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.05           300         462      195     603 290      397 540      361</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        RetC.Cones</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.0001        130</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.001         214</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.01          458</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.05          864</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

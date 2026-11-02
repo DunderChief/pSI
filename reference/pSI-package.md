@@ -59,6 +59,8 @@ Useful links:
 
 - <https://github.com/DunderChief/pSI>
 
+- <https://dunderchief.github.io/pSI/>
+
 - Report bugs at <https://github.com/DunderChief/pSI/issues>
 
 ## Author

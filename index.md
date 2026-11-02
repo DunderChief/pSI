@@ -109,8 +109,9 @@ pSI 1.0 and 1.1 were released on CRAN in January 2014, maintained by
 Alan B. Wells. The package was archived in September 2020 when the
 maintainer’s email address stopped working. Version 1.2.0 brings it back
 to CRAN with David R. O’Brien, a co-author since 1.0, as maintainer. The
-five exported functions keep their names, arguments and results; see
-[NEWS.md](https://dunderchief.github.io/pSI/NEWS.md) for what changed.
+five exported functions keep their names, arguments and results; see the
+[changelog](https://dunderchief.github.io/pSI/news/index.html) for what
+changed.
 
 ## License
 
