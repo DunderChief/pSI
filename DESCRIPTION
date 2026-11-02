@@ -21,7 +21,7 @@ Description: Calculates the Specificity Index (pSI) statistic, which identifies
     types and human brain regions used in those papers, formerly the 'pSI.data'
     package, are downloaded on first use with psi_data().
 License: GPL (>= 2)
-URL: https://github.com/DunderChief/pSI
+URL: https://github.com/DunderChief/pSI, https://dunderchief.github.io/pSI/
 BugReports: https://github.com/DunderChief/pSI/issues
 Depends: R (>= 4.0.0)
 Imports: graphics, grDevices, stats, tools, utils

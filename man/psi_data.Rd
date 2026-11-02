@@ -69,8 +69,10 @@ mouse <- psi_data("mouse", cache = FALSE)
 if (!is.null(mouse)) {
   names(mouse)
   dim(mouse$psi.out)
-  ## CSEA: is the AutDB candidate list enriched in any mouse cell type?
-  fisher.iteration(mouse$psi.out, candidate.genes$AutDB)
+  ## how many genes are specific to each mouse cell type at each threshold
+  pSI.count(mouse$psi.out)
+  ## CSEA of a candidate list against these cell types (a few seconds):
+  ## fisher.iteration(mouse$psi.out, candidate.genes$AutDB)
 }
 }
 }

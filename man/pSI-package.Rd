@@ -51,6 +51,7 @@ Dougherty JD (2015). The anatomical distribution of genetic associations.
 Useful links:
 \itemize{
   \item \url{https://github.com/DunderChief/pSI}
+  \item \url{https://dunderchief.github.io/pSI/}
   \item Report bugs at \url{https://github.com/DunderChief/pSI/issues}
 }
 
