@@ -2,9 +2,11 @@ outp <- sample.data$pSI.output
 autdb <- candidate.genes$AutDB
 
 test_that("fisher.iteration() reproduces the pSI 1.1 output", {
-  expect_identical(fisher.iteration(outp, autdb), fixture("psi11_fisher_AutDB"))
-  expect_identical(fisher.iteration(outp, autdb, p.adjust = FALSE), fixture("psi11_fisher_AutDB_nominal"))
-  expect_identical(fisher.iteration(outp, candidate.genes$hcrt.genes), fixture("psi11_fisher_hcrt"))
+  # p-values from fisher.test() can differ in the last bit between platforms
+  # (seen on macOS arm64), so compare to a tight tolerance rather than bitwise.
+  expect_equal(fisher.iteration(outp, autdb), fixture("psi11_fisher_AutDB"), tolerance = 1e-12)
+  expect_equal(fisher.iteration(outp, autdb, p.adjust = FALSE), fixture("psi11_fisher_AutDB_nominal"), tolerance = 1e-12)
+  expect_equal(fisher.iteration(outp, candidate.genes$hcrt.genes), fixture("psi11_fisher_hcrt"), tolerance = 1e-12)
 })
 
 test_that("output has one row per cell type, one column per threshold, BH-adjusted by default", {
