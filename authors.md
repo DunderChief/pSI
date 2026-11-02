@@ -16,7 +16,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/DunderChief/pSI/blob/pSI.data-1.0/inst/CITATION)
+[`inst/CITATION`](https://github.com/DunderChief/pSI/blob/main/inst/CITATION)
 
 Xu X, Wells A, O'Brien D, Nehorai A, Dougherty J (2014). “Cell
 type-specific expression analysis to identify putative cellular
